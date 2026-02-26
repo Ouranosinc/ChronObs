@@ -203,8 +203,10 @@ if __name__ == "__main__":
 
         for key_input, ds_input in sorted(dict_input.items()):
 
-            # # skip all but ...:
-            # if 'RDRS' not in key_input:
+            # skip all but ...:
+            # if 'AHCCD' not in key_input:
+            #     continue
+            # if 'pr' in key_input:
             #     continue
             
             with (
@@ -242,8 +244,10 @@ if __name__ == "__main__":
                         for da in ds_ind.variables.values():
                             da.encoding.pop('chunks', '')
                         rechunk = {key:CONFIG["indicators"]["xy_chunksize"] if key not in ['time', 'horizon', 'season', 'month', 'linreg_param'] else -1 for key in ds_ind.sizes}
+                        #rechunk = {key:30 for key in ds_ind.sizes}
+                        ds_ind = ds_ind.chunk(rechunk)
                         path_ind = f"{CONFIG['paths']['task']}".format(**cur)
-                        xs.save_to_zarr(ds_ind, path_ind, **CONFIG["indicators"]["save"], rechunk=rechunk)
+                        xs.save_to_zarr(ds_ind, path_ind, **CONFIG["indicators"]["save"])
                         pcat.update_from_ds(ds=ds_ind, path=path_ind)
 
     # --- CLIMATOLOGIES ---
@@ -259,10 +263,10 @@ if __name__ == "__main__":
                 "processing_level": "climatology",
             }
 
-
-            # if key_input not in 'GovCan_AHCCD_CAN_station-pr.Quebec.indicators.MS':  # FixMe: remove this
-            #    continue
-
+            # skip all but ...:
+            # if 'AHCCD' not in key_input:
+            #     continue
+ 
             if not pcat.exists_in_cat(**cur):
                 with (Client(**CONFIG["aggregate"]["dask"], **daskkws) as client,
                       xs.measure_time(name=f"climatologies {key_input}", logger=logger)
@@ -356,7 +360,7 @@ if __name__ == "__main__":
                                 ds=ds_input_trend,
                                 **CONFIG["aggregate"]["climatological_trend"],
                                 periods=period,
-                                min_periods=0.7,
+                                # min_periods=0.7, # moved to config!
                                 rename_variables=True,
                                 horizons_as_dim=True,
                             )
@@ -369,9 +373,10 @@ if __name__ == "__main__":
                     # save to zarr
                     for da in ds_clim.variables.values():
                         da.encoding.pop('chunks', '')
-                    rechunk = {key:CONFIG["climatologies"]["xy_chunksize"] if key not in ['time', 'horizon', 'season', 'month', 'linreg_param'] else -1 for key in ds_clim.sizes}
+                    rechunk = {key:CONFIG["aggregate"]["xy_chunksize"] if key not in ['time', 'horizon', 'season', 'month', 'linreg_param'] else -1 for key in ds_clim.sizes}
                     path = f"{CONFIG['paths']['task']}".format(**cur)
-                    xs.save_to_zarr(ds_clim, path, **CONFIG["aggregate"]["save"], rechunk=rechunk)
+                    ds_clim = ds_clim.chunk(rechunk)
+                    xs.save_to_zarr(ds_clim, path, **CONFIG["aggregate"]["save"])
                     pcat.update_from_ds(ds=ds_clim, path=path)
 
     # --- PLOTTING ---

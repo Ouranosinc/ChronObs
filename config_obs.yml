@@ -11,11 +11,11 @@
 #  (by modifying extract:simulation:search_data_catalogs:other_search_criteria:)
 # to make sure all tasks work properly before launching it for all simulations.
 tasks:
-  #- extract # Extract station data, (gridded observation data), and reanalysis data.
-  #- regrid # Regrid the simulation onto a common grid (ERA5-Land).
+  # - extract # Extract station data, (gridded observation data), and reanalysis data.
+  # - regrid # Regrid the simulation onto a common grid (ERA5-Land).
   # - cleanup # Handle different units in datasets.
   - indicators # Compute xclim indicators on the datasets.
-  # - climatologies # Compute climatological operations for the indicators (mean, std, trend).
+  - climatologies # Compute climatological operations for the indicators (mean, std, trend).
   #- plotting # Make plots of results from climatological operations for annual, seasonal, and monthly data.
   #- "ensembles" # Compute/compare different datasets and assess uncertainties in historical data (ToDo)
 
@@ -97,11 +97,11 @@ extract:  # ------------------------------------- Extraction -------------------
         buffer: 0.03 # needed to capture all QC stations
         shape: /exec/braun/data/obsflow/gis/region_admin.zip!region_admin.shp
         # shape: /scen3/braun/data/obs_synthese23/gis/lpr_000b16a_e_QC_simpl1.zip!lpr_000b16a_e_QC_simpl1.shp
-    validation_period:
-      miss: "WMO"
-      window: 35
-      min_years: 25
-      freq: "YS"
+    # validation_period:
+    #   miss: "WMO"
+    #   window: 35
+    #   min_years: 25
+    #   freq: "YS"
     xarray_open_kwargs:
       chunks:
         station: 1
@@ -135,11 +135,11 @@ extract:  # ------------------------------------- Extraction -------------------
         buffer: 0.03 # needed to capture all QC stations
         shape: /exec/braun/data/obsflow/gis/region_admin.zip!region_admin.shp
         # shape: /scen3/braun/data/obs_synthese23/gis/lpr_000b16a_e_QC_simpl1.zip!lpr_000b16a_e_QC_simpl1.shp
-    validation_period:
-      miss: "WMO"
-      window: 35
-      min_years: 25
-      freq: "YS"
+    # validation_period:
+    #   miss: "WMO"
+    #   window: 35
+    #   min_years: 25
+    #   freq: "YS"
     xarray_open_kwargs:
       chunks:
         station: 1
@@ -303,6 +303,7 @@ aggregate:  # ------------------------------------- Climatological Operations --
   vars_for_climatological_mean: # not used for now
   climatological_mean: # automatically passed to the function
     op: mean
+    min_periods: 25
     to_level: climatology
   vars_for_interannual_std: &indicators
     # - R95pTOT
@@ -353,10 +354,12 @@ aggregate:  # ------------------------------------- Climatological Operations --
     - tx_std
   climatological_std: # automatically passed to the function
     op: std
+    min_periods: 25
     to_level: climatology
   vars_for_climatological_trend: *indicators
   climatological_trend: # automatically passed to the function
     op: linregress
+    min_periods: 0.7
     to_level: climatology
   xy_chunksize : *xy_chunksize
   save:
