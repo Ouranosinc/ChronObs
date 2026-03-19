@@ -1,4 +1,4 @@
-# ObsFlow
+# ChronObs
 A workflow to extract, analyze and visualize data of historical climate.
 
 The operations of this workflow are based on and exploit the xscen, xclim and spirograph libraries.
