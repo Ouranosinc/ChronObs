@@ -1,0 +1,479 @@
+# Entrees pour General_CartoSynthese_obs.py
+# Fichier de configuration pour des assemblages de cartes 
+# montrant le climat observé à l'aide réanalyses et de 
+# donnees homogénéisées aux station.
+#
+# Panneaux de figures correspondennt aux figures finales (mars 2026)
+# de la Synthèse d'Ouranos sur l'évolution des températures au Québec.
+#
+#------------------------------------------
+# Section commune a tous les panneaux
+
+climdatadir: "/exec/cote/data/temperatures_obsflow2/climatology" # Dossier des donnees climadata
+#climdatadir: "/exec/cote/data/indic_obsflow/climatology" # Dossier des donnees 
+outfolder: "/exec/cote/obsflow/REFONTE2" # Dossier de sortie pour les figures
+add_contour_lab: False
+add_contours: False
+
+season_dict: &seasonal_alias
+  seasonal:
+    DJF: "Hiver"
+    MAM: "Printemps"
+    JJA: "Été"
+    SON: "Automne"
+  annual: &annual_alias
+    annual: "Annuel"
+
+noms_variables_dict: &variables_alias
+  tn: "Tmin"
+  tg: "Tmoy"
+  tx: "Tmax"
+  dtr: "AQT"  
+
+#-------------------------------------------
+# Definition de chacun des panneaux de cartes
+# ------------------------------------------
+
+panno_dict:
+  panno1:     ### Figure 2 normales sausonnières Tmin, Tmoy, Tmax 1991-2020 
+    agencement: 'trio_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasons1 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables1 ['tn_mean_clim_mean', 'tg_mean_clim_mean', 'tx_mean_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: False
+      colorlim: [-30, 30]
+      c_interv: 3.0
+      edgecolor: "#6F6F6F"
+      extend: "both"
+      suptitle: "normales saisonnières"
+      titles_variables:
+        tn_mean_clim_mean: "Tmin"
+        tg_mean_clim_mean: "Tmoy"
+        tx_mean_clim_mean: "Tmax"
+      titles_saisons: *seasonal_alias
+      
+
+    
+  panno2:     ### Figure A1 normales annuelles Tmin, Tmoy, Tmax 1991-2020
+    agencement: 'trio_annuel'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons2 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variables2 ['tn_mean_clim_mean', 'tg_mean_clim_mean', 'tx_mean_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: False
+      colorlim: [-15, 15]
+      c_interv: 1.5
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      ticks_step: 2
+      suptitle: "normales annuelles"
+      titles_variables:
+        tn_mean_clim_mean: "Tmin"
+        tg_mean_clim_mean: "Tmoy"
+        tx_mean_clim_mean: "Tmax"
+      titles_saisons: *annual_alias
+  
+
+  panno3:   ### Figure 3 AQT saisonnières 1991-2020
+    agencement: 'solo_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons3 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables3 ['dtr_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      colorlim: [4, 15]
+      c_interv: 1.0
+      edgecolor: "#6F6F6F"
+      extend: "both"
+      suptitle: "amplitude quotidienne de la température"
+      titles_variables: None
+      titles_saisons: *seasonal_alias 
+
+  panno4:   ### Figure 4 ecart-type intrasaionniers Tmoy 1991-2020
+    agencement: 'solo_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons4 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables4 ['tg_std_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      levels: [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0]
+      edgecolor: "lightgray"
+      extend: "neither"
+      suptitle: "écarts-types intrasaisonniers Tmoy"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+  panno5:   ### Figure 5 ecarts-types interannuels 4 saisons Tmoy 1991-2020
+    agencement: 'solo_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons5 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables5 ['tg_mean_clim_std']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      levels: [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0]
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      suptitle: "écarts-types interannuels Tmoy"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+  panno6:  ### Figure 6 TXx 1991-2020
+    agencement: 'solo_annuel'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons6 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variables6 ['tx_max_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      colorlim: [20, 33]
+      c_interv: 1.0
+      edgecolor: "#b0b0b0"
+      extend: "both"
+      suptitle: "TXx annuel"
+      titles_variables: None
+      titles_saisons: None 
+
+  panno7:  ### Figure 7 TXx 1991-2020
+    agencement: 'solo_annuel'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    absvalues: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    figsize: [7.5, 10]
+    seasons: &seasons7 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variables7 ['tn_min_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      colorlim: [-42, -22]
+      c_interv: 1.0
+      edgecolor: "#6F6F6F"
+      extend: "both"
+      suptitle: "TNn annuel"
+      titles_variables: None
+      titles_saisons: None 
+
+  panno8:  ### Figure 8 tendances saisonnières 1961-2020
+    agencement: 'trio_saisonnier'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasons8 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables8 ['tn_mean_clim_linregress', 'tg_mean_clim_linregress', 'tx_mean_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: True  
+      colorlim: [-0.2, 1.2]
+      c_interv: 0.1
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      units: "°C/décennie"
+      suptitle: "Tendances saisonnières"
+      titles_variables:
+        tn_mean_clim_linregress: "Tmin"
+        tg_mean_clim_linregress: "Tmoy"
+        tx_mean_clim_linregress: "Tmax"
+      titles_saisons: *seasonal_alias
+
+  panno9:   ### Figure 9 AQT tendances saisonnières 1961-2020
+    agencement: 'solo_saisonnier'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasons9 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variables9 ['dtr_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: False  
+      colorlim: [-0.14, 0.14]
+      c_interv: 0.02
+      edgecolor: "lightgray"
+      extend: "both"
+      units: "°C/décennie"
+      suptitle: "tendances saisonnières AQT"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+  panno10:  ### Figure 10 TXx tendances annuelles 1961-2020
+    agencement: 'solo_annuel'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasons10 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variables10 ['tx_max_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: True  
+      colorlim: [-0.2, 1.2]
+      c_interv: 0.1
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      units: "degC/year"
+      suptitle: "tendances annuelles TXx"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+  panno11:  ### Figure 11 TNn tendances annuelles 1961-2020
+    agencement: 'solo_annuel'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasons11 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variables11 ['tn_min_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: True  
+      colorlim: [-0.2, 1.2]
+      c_interv: 0.1
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      units: "degC/year"
+      suptitle: "tendances annuelles TNn"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+  pannoA2:  ### Figure A2 ecarts-types intrasaisonniers Tmin et Tmax 1991-2020
+    agencement: 'duo_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasonsA2 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variablesA2 ['tn_std_clim_mean', 'tx_std_clim_mean']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      levels: [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0]  
+      edgecolor: "lightgray"
+      extend: "neither"
+      suptitle: Default
+      titles_variables:
+        tn_std_clim_mean: "Tmin"
+        tx_std_clim_mean: "Tmax"
+      titles_saisons: *seasonal_alias     
+
+  pannoA3:  ### Figure A3 ecarts-types interannuels Tmin et Tmax 1991-2020
+    agencement: 'duo_saisonnier'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasonsA3 ['DJF', 'MAM', 'JJA', 'SON']
+    xfreq: "QS-DEC"
+    variables: &variablesA3 ['tn_mean_clim_std', 'tx_mean_clim_std']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      levels: [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0]  
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      suptitle: Default
+      titles_variables:
+        tn_mean_clim_std: "Tmin"
+        tx_mean_clim_std: "Tmax"
+      titles_saisons: *seasonal_alias
+
+  pannoA4:  ### Figure A4 ecarts-types interannuels Tmin, Tmoy et Tmax 1991-2020
+    agencement: 'trio_annuel'
+    horizon: "1991-2020"
+    affiche_IDM: True
+    recon: "GovCan_CaSR"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: False
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasonsA4 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variablesA4 ['tn_mean_clim_std', 'tg_mean_clim_std', 'tx_mean_clim_std']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_seq"
+      divergent: False
+      asymmetric: False
+      levels: [0.0, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 7.5, 10.0, 12.5, 15.0, 20.0]  
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      suptitle: "écart-types interannuels"
+      titles_variables:
+        tn_mean_clim_std: "Tmin"
+        tg_mean_clim_std: "Tmoy"
+        tx_mean_clim_std: "Tmax"
+      titles_saisons: *seasonal_alias
+
+  pannoA5:  
+    agencement: 'trio_annuel'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasonsA5 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variablesA5 ['tn_mean_clim_linregress', 'tg_mean_clim_linregress', 'tx_mean_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: True  
+      colorlim: [-0.2, 1.2]
+      c_interv: 0.1
+      ticks_step: 2
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      units: "°C/décennie"
+      suptitle: "tendances annuelles"
+      titles_variables:
+        tn_mean_clim_linregress: "Tmin"
+        tg_mean_clim_linregress: "Tmoy"
+        tx_mean_clim_linregress: "Tmax"
+      titles_saisons: *seasonal_alias    
+
+  pannoA6:   ### Figure A6 tendances annuelles AQT 1961-2020 
+    agencement: 'solo_annuel'
+    horizon: "1961-2020"
+    affiche_IDM: True
+    recon: "ECMWF_ERA5-Land"
+    affiche_stations: True
+    stationsprefix: "GovCan_AHCCD_CAN_station-tas"
+    tendances: True
+    absvalues: True
+    figsize: [7.5, 10]
+    seasons: &seasonsA6 ['annual']
+    xfreq: "YS-JAN"
+    variables: &variablesA6 ['dtr_clim_linregress']
+    carto_options:
+      draw_gridlines: True
+      cmap: "temp_div"
+      divergent: True
+      asymmetric: False  
+      colorlim: [-0.12, 0.12]
+      c_interv: 0.02
+      edgecolor: "#6F6F6F"
+      extend: "neither"
+      units: "degC/year"
+      suptitle: "tendances annuelles AQT"
+      titles_variables: None
+      titles_saisons: *seasonal_alias
+
+# Fin du fichier de configuration
